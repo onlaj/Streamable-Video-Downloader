@@ -232,7 +232,9 @@ class DownloadManager:
                         name = vid_list.data["videos"][i]["original_name"]
                         self.d = threading.Thread(target=download_manager.get_video, args=(url, name))
                         self.d.start()           
-                        i += 1                        
+                        i += 1
+                    else:
+                        i += 1
                 except:
                     i += 1
             else:
