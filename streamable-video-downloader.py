@@ -10,6 +10,7 @@ import time
 import threading
 import os
 import datetime
+import string
 
 def callback(url):
     webbrowser.open_new(url)
@@ -43,7 +44,9 @@ class GUI:
 
         self.link1 = Label(self.master, text="API page", fg="blue", cursor="hand2")
         self.link1.pack()
-        self.link1.bind("<Button-1>", lambda e: callback("https://ajax.streamable.com/videos?sort=date_added&sortd=DESC&count=10000&page=1"))
+        self.link1.bind("<Button-1>", lambda e: callback("https://ajax.streamable.com/videos?sort=date_added&sortd=ASC&count=10000&page=1"))
+        # Use DESC if you want descending date (earliest first)
+        # API will only return 100 videos, use page=2... to get the next set of 100
 
         self.entry_api = ScrolledText(self.master, width=70, height=8)
         self.entry_api.pack()
@@ -229,7 +232,17 @@ class DownloadManager:
                 try:
                     if(gui.is_pending_checked.get() == 0 or vid_list.data["videos"][i]["stale"] == True):
                         url = "https:"+vid_list.data["videos"][i]["files"]["mp4"]["url"]
-                        name = vid_list.data["videos"][i]["original_name"]
+                        title = vid_list.data["videos"][i]["title"]
+                        fileID = vid_list.data["videos"][i]["file_id"]
+                        # filename should always start with fileID, because it's unique, and end with .mp4
+                        # if video has a title, append it
+                        name = fileID
+                        if title:
+                            #video title needs to be cleansed before putting into filename
+                            valid_chars = "-_.() %s%s" % (string.ascii_letters, string.digits)
+                            title = ''.join(c for c in title if c in valid_chars)
+                            name = name + "_" + title
+                        name = name + ".mp4"
                         self.d = threading.Thread(target=download_manager.get_video, args=(url, name))
                         self.d.start()           
                         i += 1
