@@ -1,9 +1,8 @@
-from tkinter import *
+import tkinter as tk
+import tkinter.ttk as ttk
 import webbrowser
 from tkinter.scrolledtext import ScrolledText
-from tkinter.ttk import Progressbar
-from tkinter import filedialog
-from tkinter import messagebox
+from tkinter import filedialog, messagebox
 import json
 import requests
 import time
@@ -18,7 +17,7 @@ def callback(url):
 def browse_button():    
     filename = filedialog.askdirectory()
     gui.folder_path = filename
-    gui.entry_directory.delete(0,END)
+    gui.entry_directory.delete(0,tk.END)
     gui.entry_directory.insert(0,filename)
     
 def sizeof_fmt(num, suffix='B'):
@@ -39,10 +38,11 @@ class GUI:
         self.master.minsize(600, 550)
         self.master.maxsize(600, 550)
 
-        self.text_instruction1 = Label(self.master, text="Log in to streamable, open API page and copy paste the content to text field below")
+        self.text_instruction1 = ttk.Label(self.master, text="Log in to streamable, open API page and copy paste the content to text field below")
         self.text_instruction1.pack()
 
-        self.link1 = Label(self.master, text="API page", fg="blue", cursor="hand2")
+        ttk.Style().configure("Hyperlink.TLabel", foreground="blue")
+        self.link1 = ttk.Label(self.master, text="API page", style="Hyperlink.TLabel", cursor="hand2")
         self.link1.pack()
         self.link1.bind("<Button-1>", lambda e: callback("https://ajax.streamable.com/videos?sort=date_added&sortd=ASC&count=10000&page=1"))
         # Use DESC if you want descending date (earliest first)
@@ -51,79 +51,77 @@ class GUI:
         self.entry_api = ScrolledText(self.master, width=70, height=8)
         self.entry_api.pack()
         
-        self.button_load_json = Button(self.master, text="Load videos", command=vid_list.get_list)
+        self.button_load_json = ttk.Button(self.master, text="Load videos", command=vid_list.get_list)
         self.button_load_json.place(x = 10,y = 180,width=580,height=30)
         
-        self.text_total_videos = Label(self.master, text="All videos")
+        self.text_total_videos = ttk.Label(self.master, text="All videos")
         self.text_total_videos.place(x = 10,y = 220,width=90,height=30)        
-        self.entry_total_videos = Entry(window,width=10, state='disabled')
+        self.entry_total_videos = ttk.Entry(window,width=10, state='disabled')
         self.entry_total_videos.place(x = 110,y = 220,width=90,height=30)        
         
-        self.text_total_duration = Label(self.master, text="Total duration")
+        self.text_total_duration = ttk.Label(self.master, text="Total duration")
         self.text_total_duration.place(x = 200,y = 220,width=90,height=30)        
-        self.entry_total_duration = Entry(window,width=10, state='disabled')
+        self.entry_total_duration = ttk.Entry(window,width=10, state='disabled')
         self.entry_total_duration.place(x = 290,y = 220,width=90,height=30)
         
-        self.text_total_size = Label(self.master, text="Total size")
+        self.text_total_size = ttk.Label(self.master, text="Total size")
         self.text_total_size.place(x = 380,y = 220,width=90,height=30)        
-        self.entry_total_size = Entry(window,width=10, state='disabled')
+        self.entry_total_size = ttk.Entry(window,width=10, state='disabled')
         self.entry_total_size.place(x = 470,y = 220,width=90,height=30)        
         
-        self.text_total_pending_delete_videos = Label(self.master, text="Pending delete")
+        self.text_total_pending_delete_videos = ttk.Label(self.master, text="Pending delete")
         self.text_total_pending_delete_videos.place(x = 10,y = 260,width=90,height=30)        
-        self.entry_total_pending_delete_videos = Entry(window,width=10, state='disabled')
+        self.entry_total_pending_delete_videos = ttk.Entry(window,width=10, state='disabled')
         self.entry_total_pending_delete_videos.place(x = 110,y = 260,width=90,height=30)        
         
-        self.text_total_pending_delete_duration = Label(self.master, text="Total duration")
+        self.text_total_pending_delete_duration = ttk.Label(self.master, text="Total duration")
         self.text_total_pending_delete_duration.place(x = 200,y = 260,width=90,height=30)        
-        self.entry_total_pending_delete_duration = Entry(window,width=10, state='disabled')
+        self.entry_total_pending_delete_duration = ttk.Entry(window,width=10, state='disabled')
         self.entry_total_pending_delete_duration.place(x = 290,y = 260,width=90,height=30)
         
-        self.text_total_pending_delete_size = Label(self.master, text="Total size")
+        self.text_total_pending_delete_size = ttk.Label(self.master, text="Total size")
         self.text_total_pending_delete_size.place(x = 380,y = 260,width=90,height=30)        
-        self.entry_total_pending_delete_size = Entry(window,width=10, state='disabled')
+        self.entry_total_pending_delete_size = ttk.Entry(window,width=10, state='disabled')
         self.entry_total_pending_delete_size.place(x = 470,y = 260,width=90,height=30)  
         
-        self.is_pending_checked = IntVar()
-        self.check_download_only_pending = Checkbutton(self.master, text='Download only marked as pending to delete', onvalue=1, offvalue=0, variable=self.is_pending_checked)
+        self.is_pending_checked = tk.IntVar()
+        self.check_download_only_pending = ttk.Checkbutton(self.master, text='Download only marked as pending to delete', onvalue=1, offvalue=0, variable=self.is_pending_checked)
         self.check_download_only_pending.place(x = 10,y = 300,width=270,height=30)
                 
-        var = IntVar()
-        var.set("5")
-        self.text_threads_count = Label(self.master, text="Threads:")
-        self.text_threads_count.place(x = 450,y = 300,width=50,height=30)        
-        self.spin_threads_count = Spinbox(self.master, from_=0, to=100, textvariable=var)
+        self.text_threads_count = ttk.Label(self.master, text="Threads:")
+        self.text_threads_count.place(x = 450,y = 300,width=50,height=30)
+        self.spin_threads_count = ttk.Spinbox(self.master, from_=0, to=100)
+        self.spin_threads_count.insert(0, "5")
         self.spin_threads_count.place(x = 500,y = 300,width=90,height=30)
-        
 
-        self.text_save_to = Label(self.master, text="Save to")
+        self.text_save_to = ttk.Label(self.master, text="Save to")
         self.text_save_to.place(x = 10,y = 350,width=60,height=30)
 
-        self.entry_directory = Entry(self.master)
-        self.entry_directory.place(x = 80,y = 350,width=500,height=30)
+        self.entry_directory = ttk.Entry(self.master)
+        self.entry_directory.place(x = 80,y = 351,width=455,height=30)
         self.entry_directory.insert(0,os.getcwd())
 
-        self.browse_button = Button(text="Browse", command=browse_button)
-        self.browse_button.place(x = 540,y = 350,width=50,height=30)
+        self.browse_button = ttk.Button(text="Browse", command=browse_button)
+        self.browse_button.place(x = 540,y = 350,width=50,height=32)
         
-        self.button_start_download = Button(self.master, text="Start download", command=download_manager.start_thread)
+        self.button_start_download = ttk.Button(self.master, text="Start download", command=download_manager.start_thread)
         self.button_start_download.place(x = 10,y = 400,width=580,height=50)
         
-        self.progress_bar = Progressbar(self.master, length=580)
+        self.progress_bar = ttk.Progressbar(self.master, length=580)
         self.progress_bar.place(x = 10,y = 480,width=580,height=30)        
         self.progress_bar['value'] = 0
         
-        self.text_progress_finished = Label(self.master, text="", justify="left")
+        self.text_progress_finished = ttk.Label(self.master, text="", justify="left")
         self.text_progress_finished.place(x = 10,y = 510,width=60,height=30)
         
-        self.text_total_downloaded = Label(self.master, text="")
+        self.text_total_downloaded = ttk.Label(self.master, text="")
         self.text_total_downloaded.place(x = 250,y = 510,width=100,height=30)
         
-        self.text_current_speed = Label(self.master, text="", justify="right")
+        self.text_current_speed = ttk.Label(self.master, text="", justify="right")
         self.text_current_speed.place(x = 450,y = 510,width=150,height=30)
         
     def show(self):
-        self.saveText = self.entry_api.get('1.0', END)
+        self.saveText = self.entry_api.get('1.0', tk.END)
 
 class VidList:
     def __init__(self):
@@ -131,11 +129,11 @@ class VidList:
         
     def get_list(self):
         try:
-            self.data = json.loads(str(gui.entry_api.get('1.0', END)))
+            self.data = json.loads(str(gui.entry_api.get('1.0', tk.END)))
         except:
             messagebox.showinfo('Error','Can not load API page, make sure you copied it correctly')
             return
-        gui.entry_api.delete('1.0', END)
+        gui.entry_api.delete('1.0', tk.END)
         self.total_videos = self.data['total']       
         
         self.pending_delete_count = 0
@@ -155,32 +153,32 @@ class VidList:
             self.total_size += video['size']        
 
         gui.entry_total_videos.configure(state='normal')
-        gui.entry_total_videos.delete(0,END)
+        gui.entry_total_videos.delete(0,tk.END)
         gui.entry_total_videos.insert(0,self.total_videos)
         gui.entry_total_videos.configure(state='disabled')
         
         gui.entry_total_duration.configure(state='normal')
-        gui.entry_total_duration.delete(0,END)
+        gui.entry_total_duration.delete(0,tk.END)
         gui.entry_total_duration.insert(0,str(datetime.timedelta(seconds=round(self.total_duration))))
         gui.entry_total_duration.configure(state='disabled')
         
         gui.entry_total_size.configure(state='normal')
-        gui.entry_total_size.delete(0,END)
+        gui.entry_total_size.delete(0,tk.END)
         gui.entry_total_size.insert(0,sizeof_fmt(self.total_size))
         gui.entry_total_size.configure(state='disabled')
         
         gui.entry_total_pending_delete_videos.configure(state='normal')
-        gui.entry_total_pending_delete_videos.delete(0,END)
+        gui.entry_total_pending_delete_videos.delete(0,tk.END)
         gui.entry_total_pending_delete_videos.insert(0,self.pending_delete_count)
         gui.entry_total_pending_delete_videos.configure(state='disabled')
         
         gui.entry_total_pending_delete_duration.configure(state='normal')
-        gui.entry_total_pending_delete_duration.delete(0,END)
+        gui.entry_total_pending_delete_duration.delete(0,tk.END)
         gui.entry_total_pending_delete_duration.insert(0,str(datetime.timedelta(seconds=round(self.pending_delete_total_duration))))
         gui.entry_total_pending_delete_duration.configure(state='disabled')
         
         gui.entry_total_pending_delete_size.configure(state='normal')
-        gui.entry_total_pending_delete_size.delete(0,END)
+        gui.entry_total_pending_delete_size.delete(0,tk.END)
         gui.entry_total_pending_delete_size.insert(0,sizeof_fmt(self.pending_delete_total_size))
         gui.entry_total_pending_delete_size.configure(state='disabled')        
                 
@@ -307,6 +305,6 @@ class DownloadManager:
         
 download_manager = DownloadManager()
 vid_list = VidList()
-window = Tk()
+window = tk.Tk()
 gui = GUI(window)
 window.mainloop()    
