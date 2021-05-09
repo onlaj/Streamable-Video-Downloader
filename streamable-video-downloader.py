@@ -15,10 +15,11 @@ def callback(url):
     webbrowser.open_new(url)
 
 def browse_button():    
-    filename = filedialog.askdirectory()
-    gui.folder_path = filename
-    gui.entry_directory.delete(0,tk.END)
-    gui.entry_directory.insert(0,filename)
+    directory = filedialog.askdirectory(initialdir=os.getcwd())
+    if directory:
+        gui.folder_path = directory
+        gui.entry_directory.delete(0,tk.END)
+        gui.entry_directory.insert(0,directory)
     
 def sizeof_fmt(num, suffix='B'):
     for unit in ['','K','M','G','T','P','E','Z']:
