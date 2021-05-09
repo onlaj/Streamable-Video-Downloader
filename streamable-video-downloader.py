@@ -131,7 +131,7 @@ class VidList:
         try:
             self.data = json.loads(str(gui.entry_api.get('1.0', tk.END)))
         except:
-            messagebox.showinfo('Error','Can not load API page, make sure you copied it correctly')
+            messagebox.showerror('Error','Can not load API page, make sure you copied it correctly')
             return
         gui.entry_api.delete('1.0', tk.END)
         self.total_videos = self.data['total']       
@@ -190,7 +190,7 @@ class DownloadManager:
         
     def start_thread(self):
         if(vid_list.is_json_loaded == False):
-            messagebox.showinfo('Error','You have to load content from API page first')
+            messagebox.showerror('Error','You have to load content from API page first')
             return
     
         self.t = threading.Thread(target=download_manager.start, args=())
